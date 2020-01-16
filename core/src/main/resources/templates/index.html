@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Notification API</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+</head>
+<body>
+
+<h1>
+    Notification API!
+</h1>
+<div>
+    <h3 th:text="'API Version: ' + ${apiVersion}">  </h3>
+</div>
+
+<div th:if="${swaggerEnable}">
+    <a th:href="@{/swagger-ui.html}"> <h3> Swagger UI </h3></a>
+</div>
+
+
+</body>
+</html>

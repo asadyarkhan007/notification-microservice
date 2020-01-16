@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="Azfar Abbas">
+        <sql>
+            create table `email_template`
+            (
+            `id` int (11) NOT NULL AUTO_INCREMENT,
+            `key` varchar (255) NOT NULL,
+            `text` varchar (255) NOT NULL,
+            `cc` varchar (500),
+            `bcc` varchar (500),
+            `is_active` TINYINT (1),
+            PRIMARY KEY (id)
+            ) ENGINE=INNODB;
+
+            create table `sms_template` (
+            `id` int (11) NOT NULL AUTO_INCREMENT,
+            `key` varchar (500) NOT NULL,
+            `text` TEXT NOT NULL,
+            `is_active` TINYINT (1),
+            PRIMARY KEY (id)
+            ) ENGINE=INNODB;
+
+
+            CREATE TABLE `push_notification_template` (
+            `id` INT (11) NOT NULL AUTO_INCREMENT,
+            `key` VARCHAR (255) NOT NULL,
+            `text` TEXT,
+            `is_active` TINYINT (1),
+            PRIMARY KEY (id)
+            ) ENGINE=INNODB;
+
+
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

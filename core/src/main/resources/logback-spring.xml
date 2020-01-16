@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="logRoot" value="/var/log/tomcat8"/>
+    <property name="rawPattern" value="%d{ISO8601} %5p %c{1}:%L - %m%n"/>
+    <property name="coloredPattern"
+              value="%d %highlight{%-5p}{ ERROR=red, WARN=yellow, INFO=cyan, DEBUG=green, TRACE=bright blue} %style{[%t] %C{2} (%F:%L) -}{bright,black} %m%n"/>
+    <timestamp key="byDate" datePattern="yyyy-MM-dd"/>
+
+    <springProfile name="dev">
+        <property name="emailSubject" value="Unhandled Exception Report from NMS Development Environment"/>
+    </springProfile>
+    <springProfile name="uat1">
+        <property name="emailSubject" value="Unhandled Exception Report from NMS Staging1 Environment"/>
+    </springProfile>
+    <springProfile name="uat2">
+        <property name="emailSubject" value="Unhandled Exception Report from NMS Staging2 Environment"/>
+    </springProfile>
+    <springProfile name="prod">
+        <property name="emailSubject" value="Unhandled Exception Report from NMS Production Environment"/>
+    </springProfile>
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                ${rawPattern}
+            </pattern>
+        </encoder>
+    </appender>
+    <appender name="appLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logRoot}/sm_application.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${logRoot}/%d{yyyy-MM-dd}/sm_application.%i.log</fileNamePattern>
+
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>${rawPattern}</pattern>
+        </encoder>
+    </appender>
+    <appender name="errorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logRoot}/sm_error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${logRoot}/%d{yyyy-MM-dd}/sm_error.%i.log</fileNamePattern>
+
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${rawPattern}</pattern>
+        </encoder>
+    </appender>
+    <appender name="incomingRequest" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logRoot}/sm_incoming_requests.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${logRoot}/%d{yyyy-MM-dd}/sm_incoming_requests.%i.log</fileNamePattern>
+
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>${rawPattern}</pattern>
+        </encoder>
+    </appender>
+    <appender name="emailLogger" class="ch.qos.logback.classic.net.SMTPAppender">
+
+        <smtpHost>email-smtp.eu-west-1.amazonaws.com</smtpHost>
+        <smtpPort>465</smtpPort>
+        <SSL>true</SSL>
+        <to>safeer.ansari@venturedive.com</to>
+        <from>support@venturedive.com</from>
+        <username>my_username</username>
+        <password>my_password</password>
+        <asynchronousSending>true</asynchronousSending>
+        <subject>${emailSubject}</subject>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${rawPattern}</pattern>
+        </layout>
+        <cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTracker">
+            <bufferSize>50</bufferSize>
+        </cyclicBufferTracker>
+    </appender>
+    <root level="info">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="appLog"/>
+        <appender-ref ref="errorLog"/>
+    </root>
+    <logger name="incomingRequest"  level="trace">
+        <appender-ref ref="incomingRequest"/>
+    </logger>
+    <logger name="errorLog" level="Error">
+        <appender-ref ref="errorLog"/>
+    </logger>
+
+</configuration>
+

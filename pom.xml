@@ -43,7 +43,7 @@
 		<spring.boot.version>1.5.10.RELEASE</spring.boot.version>
 		<springframework.version>5.0.4.RELEASE</springframework.version>
 		<springframework.security.version>4.2.4.RELEASE</springframework.security.version>
-		<jackson.version>2.9.4</jackson.version>
+		<jackson.version>2.9.10.8</jackson.version>
 	</properties>
 
 	<dependencyManagement>
